@@ -23,6 +23,18 @@
 - [ ] Keybinding documentation
 - [ ] Performance monitoring setup
 
+### Browser / Default Applications 🟡
+- [ ] **Domain whitelist: LibreWolf default, Firefox for sign-in domains.**
+  Keep LibreWolf as the default browser, but route a whitelist of domains that
+  require signing in (auth / MFA) to Firefox via a custom `xdg-open` / `BROWSER`
+  wrapper. Rationale: Firefox holds the logged-in / MFA-completed sessions, so
+  sending those domains to Firefox avoids redoing MFA every time.
+  - Current state (2026-10-10): default browser temporarily set to
+    `firefox.desktop` in `~/.config/mimeapps.list` (backup: `mimeapps.list.bak`).
+    Target end state = LibreWolf default + Firefox-for-auth whitelist.
+  - Candidate approach: a small `xdg-open` shim (or `BROWSER`) that matches the
+    URL host against the whitelist and dispatches to `firefox` vs `librewolf`.
+
 ### Low Priority 🟢
 - [ ] Additional niri window rules
 - [ ] Qutebrowser userscripts
