@@ -1,3 +1,5 @@
+alias c='clear'
+
 # Better ls
 alias ls='eza --icons auto'
 
