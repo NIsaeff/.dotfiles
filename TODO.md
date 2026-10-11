@@ -48,6 +48,18 @@
   - Candidate approach: a small `xdg-open` shim (or `BROWSER`) that matches the
     URL host against the whitelist and dispatches to `firefox` vs `librewolf`.
 
+### Gotchas / Watch-outs 🚧
+- [ ] **Never make `~/.config` a symlink (keep it a real directory).**
+  On 2026-10-10 a dangling `~/.config -> ~/.dotfiles/config` symlink (while
+  `~/.dotfiles` was moved aside) caused a running **Firefox** to recreate its
+  profile and get a poisoned QuotaManager state: Browser Console spammed
+  `NS_ERROR_FILE_READ_ONLY` / `IndexedDB ... DirectoryLockFailed`, and
+  **Gemini was blank/black when signed in** (signed-out worked). Storage was
+  actually fine; a **full quit + relaunch** (`pkill firefox`) cleared it.
+  - If it recurs: `pkill firefox` then relaunch; if still broken,
+    `rm -rf ~/.config/mozilla/firefox/<profile>/storage/{default,permanent,temporary}`.
+  - Rule: `~/.config` must be a real dir (stow target), never a symlink.
+
 ### Low Priority 🟢
 - [ ] Additional niri window rules
 - [ ] Qutebrowser userscripts
