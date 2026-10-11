@@ -15,6 +15,19 @@
 - [ ] Python development environment optimization
 - [ ] Backup strategy for dotfiles (git repo)
 - [ ] System update automation (pacman hooks)
+- [ ] **Try carapace for zsh completions (soon).**
+  Problem: pressing Tab on commands with no zsh completion definition falls back
+  to `_default` → `_files`, dumping the current directory instead of showing
+  flags/arguments. `carapace` is a spec-driven completion engine (~1000+ commands,
+  can bridge zsh/fish/bash) — the closest thing to an "LSP" for the shell.
+  - Plan: install `carapace` (AUR `carapace-bin`), then in `zsh/.config/zsh/.zshrc`
+    (after `compinit`): `source <(carapace _carapace)`; optionally
+    `export CARAPACE_BRIDGES='zsh,fish,bash'`.
+  - Also consider `ZSH_AUTOSUGGEST_STRATEGY=(completion history)` so inline
+    suggestions use context-aware completions.
+  - Alternatives: `nodejs-inshellisense` (IDE overlay, heavier), per-tool
+    `docker completion zsh` / `kubectl completion zsh` dumps.
+  - Collisions/UX: rides normal Tab; add to `KEYBINDINGS.md` when adopted.
 
 ### Medium Priority 🟡
 - [ ] Waybar configuration and theming
