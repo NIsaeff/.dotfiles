@@ -21,6 +21,14 @@ zvm_after_init() {
   # Ctrl+Left -> move backward one word (^[[1;5D is the terminal escape code)
   bindkey '^[[1;5D' backward-word
 
+  # TODO: Fix on Desktop when merge
+  # Ctrl+R -> fzf fuzzy history search
+  # (zsh-vi-mode resets ^R to history-incremental-search-backward on init)
+  bindkey '^R' fzf-history-widget
+
+  # Ctrl+T -> fzf file picker including hidden files
+  bindkey '^T' fzf-file-widget
+
   # Ctrl+F -> fzf file picker (no hidden files)
   bindkey '^F' _fzf_file_no_hidden
 
