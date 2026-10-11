@@ -62,6 +62,28 @@ Tabs group panes under a common ancestor; panes may sit in subdirectories of tha
 - **pane dir** = the pane's cwd.
 - **pane process** = the foreground command, or a long-running service attached to the pane.
 
+### Directory-segment capture (hoisting rule) — OPEN
+Between a parent level and its children there may be **intermediate directory segments**.
+How do we attribute them to a label?
+
+Proposed rule:
+- If a segment is **shared by all children**, **hoist it to the parent's label** — capture it
+  at the highest level where it is common.
+- If the children **diverge**, label the **divergent segments on the children individually**
+  (the parent keeps only the common prefix / lowest common ancestor).
+
+This avoids duplicate labels: shared context floats up, differences stay local.
+
+- `~/work` with panes `~/work/api` and `~/work/web` → hoist `work` to the **tab**;
+  children label `api` / `web`.
+- panes both under `~/work/api` → hoist `api` up too; children carry no extra dir
+  (fall back to the **process** label).
+
+Still open:
+- how **deep** to hoist — `session` vs `tab` (where does a shared segment stop?).
+- **partially-shared** dirs: parent takes the LCA; children take the divergent tail.
+- what counts as "the same" dir — path equality, symlinks, or **git root**?
+
 ### Ambiguity rule (proposed)
 > If two tabs resolve to the **same dir / name**, the label is ambiguous →
 > **prompt for an ad-hoc note** (or an AI/agent proposes a distinguishing name).
@@ -135,6 +157,15 @@ Enable title emission; let zellij display it.
 
 Abbreviation ideas: `backend`→`be`, `frontend`→`fe`, `database`→`db`, `postgres`→`pg`.
 
+### Horizontal pane labels (OPEN — explore)
+Zellij historically rendered a pane's title **on the top border of the pane frame** (a
+horizontal label). We want that back / configurable.
+- Investigate: `pane_frames`, `pane_frame_style`, `simplified_ui`, and whether current
+  builds still draw the title in the top border vs deferring to `zellij:tab-bar` /
+  `zellij:compact-bar`.
+- Interplay with the §2 naming model and OSC emission (§3).
+- "Needs more thinking to implement well."
+
 ---
 
 ## 5. Tab naming (OPEN — shell hook vs plugin)
@@ -195,6 +226,10 @@ Lean: **A1** for now; the §2 model is the argument for **A2** (or a custom plug
 5. **Scroll extras:** keep just `Ctrl+S`+`e`, or add `g`/`G` (and any others)?
 6. **Ambiguity notes:** where to store the ad-hoc note — in the tab/pane name, or state?
    And is AI/auto-proposal in scope?
+7. **Directory-segment hoisting:** how deep to hoist shared segments (session vs tab), and
+   how to label partially-shared dirs.
+8. **Horizontal pane labels:** how to bring back the old-style top-border pane titles (vs
+   `simplified_ui` / tab-bar behavior).
 
 ## 10. References
 
