@@ -87,6 +87,26 @@
 - [ ] Troubleshooting notes
 - [ ] Performance benchmarks
 
+## Deferred / Decisions
+
+- [ ] **zsh plugin location: keep in the config dir (decided 2026-10-11).**
+  Current: `ZPLUGINDIR="${ZDOTDIR:-$HOME/.config/zsh}/plugins"`, matching
+  `radleylewis/zsh` upstream. Considered moving the plugin clones to the XDG
+  data dir (`$XDG_DATA_HOME/zsh/plugins` -> `~/.local/share/zsh/plugins`) on the
+  rationale that plugins are downloaded data, not hand-edited config, and
+  `~/.config` should hold only configuration.
+  - **Decision: not doing it for now.** Keeping parity with upstream
+    (`radleylewis/zsh` keeps them in `$ZDOTDIR/plugins`); the current stow setup
+    already keeps plugin clones out of the dotfiles repo (they are a local,
+    untracked dir at `~/.config/zsh/plugins`).
+  - If revisited: set
+    `ZPLUGINDIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins"` in
+    `zsh/.config/zsh/plugins.zsh`, then
+    `mkdir -p ~/.local/share/zsh && mv ~/.config/zsh/plugins ~/.local/share/zsh/plugins`,
+    `exec zsh`, and commit the `plugins.zsh` change.
+  - Note: this becomes a deliberate local divergence from `radleylewis/zsh`, so
+    keep a comment in `plugins.zsh` for future upstream diffs.
+
 ---
 *Last updated: $(date)*
 *System: EndeavourOS (Arch Linux) on Lenovo IdeaPad 5 Pro*
