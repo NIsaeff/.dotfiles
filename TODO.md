@@ -15,6 +15,19 @@
 - [ ] Python development environment optimization
 - [ ] Backup strategy for dotfiles (git repo)
 - [ ] System update automation (pacman hooks)
+- [ ] **Try carapace for zsh completions (soon).**
+  Problem: pressing Tab on commands with no zsh completion definition falls back
+  to `_default` → `_files`, dumping the current directory instead of showing
+  flags/arguments. `carapace` is a spec-driven completion engine (~1000+ commands,
+  can bridge zsh/fish/bash) — the closest thing to an "LSP" for the shell.
+  - Plan: install `carapace` (AUR `carapace-bin`), then in `zsh/.config/zsh/.zshrc`
+    (after `compinit`): `source <(carapace _carapace)`; optionally
+    `export CARAPACE_BRIDGES='zsh,fish,bash'`.
+  - Also consider `ZSH_AUTOSUGGEST_STRATEGY=(completion history)` so inline
+    suggestions use context-aware completions.
+  - Alternatives: `nodejs-inshellisense` (IDE overlay, heavier), per-tool
+    `docker completion zsh` / `kubectl completion zsh` dumps.
+  - Collisions/UX: rides normal Tab; add to `KEYBINDINGS.md` when adopted.
 
 ### Medium Priority 🟡
 - [ ] Waybar configuration and theming
@@ -22,6 +35,30 @@
 - [ ] Terminal color scheme optimization
 - [ ] Keybinding documentation
 - [ ] Performance monitoring setup
+
+### Browser / Default Applications 🟡
+- [ ] **Domain whitelist: LibreWolf default, Firefox for sign-in domains.**
+  Keep LibreWolf as the default browser, but route a whitelist of domains that
+  require signing in (auth / MFA) to Firefox via a custom `xdg-open` / `BROWSER`
+  wrapper. Rationale: Firefox holds the logged-in / MFA-completed sessions, so
+  sending those domains to Firefox avoids redoing MFA every time.
+  - Current state (2026-10-10): default browser temporarily set to
+    `firefox.desktop` in `~/.config/mimeapps.list` (backup: `mimeapps.list.bak`).
+    Target end state = LibreWolf default + Firefox-for-auth whitelist.
+  - Candidate approach: a small `xdg-open` shim (or `BROWSER`) that matches the
+    URL host against the whitelist and dispatches to `firefox` vs `librewolf`.
+
+### Gotchas / Watch-outs 🚧
+- [ ] **Never make `~/.config` a symlink (keep it a real directory).**
+  On 2026-10-10 a dangling `~/.config -> ~/.dotfiles/config` symlink (while
+  `~/.dotfiles` was moved aside) caused a running **Firefox** to recreate its
+  profile and get a poisoned QuotaManager state: Browser Console spammed
+  `NS_ERROR_FILE_READ_ONLY` / `IndexedDB ... DirectoryLockFailed`, and
+  **Gemini was blank/black when signed in** (signed-out worked). Storage was
+  actually fine; a **full quit + relaunch** (`pkill firefox`) cleared it.
+  - If it recurs: `pkill firefox` then relaunch; if still broken,
+    `rm -rf ~/.config/mozilla/firefox/<profile>/storage/{default,permanent,temporary}`.
+  - Rule: `~/.config` must be a real dir (stow target), never a symlink.
 
 ### Low Priority 🟢
 - [ ] Additional niri window rules
