@@ -11,6 +11,20 @@
 - [x] Zsh shell configuration
 
 ### High Priority 🔴
+- [ ] **KeePassXC cloud sync (Google Drive) across desktop, laptop, iPhone.**
+  Problem: the KeePassXC `.kdbx` database is local per machine, so passwords are
+  not shared. Goal: one `.kdbx` in Google Drive that all three devices read/write.
+  - Desktop (CachyOS) + laptop (Arch): KeePassXC pointed at a synced path, synced
+    via `rclone` (e.g. `rclone bisync`/`sync` to a Drive remote) or the Google
+    Drive GUI client. Keep a local hot copy; sync on a timer or on lock/unlock.
+  - iPhone: a KeePassXC-compatible client (Strongbox and KeePassium both read
+    `.kdbx` and sync via Google Drive) pointed at the same file.
+  - Open questions: rclone vs GUI Drive client on Linux; conflict handling if two
+    devices write before syncing (prefer sync-before-edit + sync-after-save);
+    keyfile vs master-password only; whether the keyfile stays off-cloud.
+  - Security: rely on the `.kdbx`'s own encryption; use a strong master password;
+    keep an offline backup of the `.kdbx` (and keyfile, if any) — never store the
+    master password itself in dotfiles or the cloud.
 - [ ] Git configuration (user.name, user.email, aliases)
 - [ ] Python development environment optimization
 - [ ] Backup strategy for dotfiles (git repo)
